@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Waypoint</title>
-    <script type="module" crossorigin src="./assets/index-ktpDdePu.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index--cL-uJx8.css">
+    <script type="module" crossorigin src="./assets/index-C1vpsicf.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CaX0rBzg.css">
   </head>
   <body>
     <header class="app-header">
@@ -20,42 +20,61 @@
 
     <main id="page-routes" class="layout">
       <section class="panel">
-        <p class="tagline">Compare real walking, cycling and driving routes.</p>
+        <div id="plan-panel">
+          <p class="tagline">Compare real walking, cycling and driving routes.</p>
 
-        <form id="trip-form" novalidate>
-          <label for="from-input">From</label>
-          <div class="input-row">
-            <div class="field">
-              <input id="from-input" type="text" placeholder="e.g. Presby Hall" autocomplete="off" />
+          <form id="trip-form" novalidate>
+            <label for="from-input">From</label>
+            <div class="input-row">
+              <div class="field">
+                <input id="from-input" type="text" placeholder="e.g. Presby Hall" autocomplete="off" />
+              </div>
+              <button id="locate-button" type="button" class="secondary" title="Use my current location">
+                📍 Me
+              </button>
             </div>
-            <button id="locate-button" type="button" class="secondary" title="Use my current location">
-              📍 Me
-            </button>
+
+            <label for="to-input">To</label>
+            <div class="field">
+              <input id="to-input" type="text" placeholder="e.g. Campus Instructional Facility" autocomplete="off" />
+            </div>
+
+            <button id="compare-button" type="submit">Compare routes</button>
+          </form>
+
+          <p id="status" class="status" role="status" aria-live="polite">
+            Type a start and a destination, then press Compare routes.
+          </p>
+
+          <ol id="route-list" class="route-list"></ol>
+
+          <div id="log-trip" class="log-trip" hidden>
+            <button id="navigate-button" type="button" class="primary">▶ Start navigation</button>
+            <p class="note">Arrive with navigation while walking or cycling to earn ⭐.</p>
+            <button id="log-button" type="button">✓ I took this (no ⭐)</button>
+            <p id="log-message" class="log-message" role="status" aria-live="polite"></p>
           </div>
 
-          <label for="to-input">To</label>
-          <div class="field">
-            <input id="to-input" type="text" placeholder="e.g. Campus Instructional Facility" autocomplete="off" />
-          </div>
-
-          <button id="compare-button" type="submit">Compare routes</button>
-        </form>
-
-        <p id="status" class="status" role="status" aria-live="polite">
-          Type a start and a destination, then press Compare routes.
-        </p>
-
-        <ol id="route-list" class="route-list"></ol>
-
-        <div id="log-trip" class="log-trip" hidden>
-          <button id="log-button" type="button">✓ I took this</button>
-          <p id="log-message" class="log-message" role="status" aria-live="polite"></p>
+          <p id="route-note" class="note" hidden>
+            Times are moving time from OpenStreetMap routing. They don't include waiting at lights, finding
+            parking, or traffic.
+          </p>
         </div>
 
-        <p id="route-note" class="note" hidden>
-          Times are moving time from OpenStreetMap routing. They don't include waiting at lights, finding
-          parking, or traffic.
-        </p>
+        <section id="nav-panel" class="nav-panel" hidden aria-label="Navigation">
+          <p id="nav-mode" class="nav-mode"></p>
+          <div class="nav-card">
+            <p id="nav-instruction" class="nav-instruction" aria-live="polite"></p>
+            <p id="nav-step-distance" class="nav-step-distance"></p>
+          </div>
+          <div class="nav-stats">
+            <p><span id="nav-time-left">–</span><small id="nav-time-label">left</small></p>
+            <p><span id="nav-distance-left">–</span><small id="nav-distance-label">to go</small></p>
+            <p><span id="nav-arrival-time">–</span><small id="nav-arrival-label">arrival</small></p>
+          </div>
+          <p id="nav-status" class="nav-status" role="status" aria-live="polite"></p>
+          <button id="nav-stop" type="button" class="secondary nav-stop">Stop navigation</button>
+        </section>
       </section>
 
       <div id="map" class="map" aria-label="Map of the routes"></div>
