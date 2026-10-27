@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Waypoint</title>
+    <script type="module" crossorigin src="./assets/index-ktpDdePu.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index--cL-uJx8.css">
+  </head>
+  <body>
+    <header class="app-header">
+      <h1>Waypoint</h1>
+      <nav class="tabs" aria-label="Pages">
+        <a id="tab-routes" href="#routes">Routes</a>
+        <a id="tab-report" href="#report">Report</a>
+        <a id="tab-room" href="#room">Room</a>
+      </nav>
+      <p id="star-count" class="star-count" title="Stars to spend in your room. Earn them by walking or cycling.">⭐ 0</p>
+    </header>
+
+    <main id="page-routes" class="layout">
+      <section class="panel">
+        <p class="tagline">Compare real walking, cycling and driving routes.</p>
+
+        <form id="trip-form" novalidate>
+          <label for="from-input">From</label>
+          <div class="input-row">
+            <div class="field">
+              <input id="from-input" type="text" placeholder="e.g. Presby Hall" autocomplete="off" />
+            </div>
+            <button id="locate-button" type="button" class="secondary" title="Use my current location">
+              📍 Me
+            </button>
+          </div>
+
+          <label for="to-input">To</label>
+          <div class="field">
+            <input id="to-input" type="text" placeholder="e.g. Campus Instructional Facility" autocomplete="off" />
+          </div>
+
+          <button id="compare-button" type="submit">Compare routes</button>
+        </form>
+
+        <p id="status" class="status" role="status" aria-live="polite">
+          Type a start and a destination, then press Compare routes.
+        </p>
+
+        <ol id="route-list" class="route-list"></ol>
+
+        <div id="log-trip" class="log-trip" hidden>
+          <button id="log-button" type="button">✓ I took this</button>
+          <p id="log-message" class="log-message" role="status" aria-live="polite"></p>
+        </div>
+
+        <p id="route-note" class="note" hidden>
+          Times are moving time from OpenStreetMap routing. They don't include waiting at lights, finding
+          parking, or traffic.
+        </p>
+      </section>
+
+      <div id="map" class="map" aria-label="Map of the routes"></div>
+    </main>
+
+    <main id="page-report" class="page" hidden>
+      <div class="month-picker">
+        <button id="report-previous" type="button" class="secondary" aria-label="Previous month">◀</button>
+        <h2 id="report-month"></h2>
+        <button id="report-next" type="button" class="secondary" aria-label="Next month">▶</button>
+      </div>
+      <div id="report-content"></div>
+    </main>
+    <main id="page-room" class="page" hidden>
+      <div id="floor-tabs" class="floor-tabs" aria-label="Floors"></div>
+      <p class="room-hint">Earn ⭐ by walking or cycling, buy furniture below, then drag it anywhere in your room.</p>
+      <div id="room" class="room" aria-label="Your room"></div>
+      <p id="room-message" class="room-message" role="status" aria-live="polite"></p>
+      <h3 class="report-heading">Shop</h3>
+      <ul id="shop" class="shop"></ul>
+    </main>
+
+  </body>
+</html>
