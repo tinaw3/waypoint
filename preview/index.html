@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Waypoint</title>
+    <meta name="theme-color" content="#15803d" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <!-- Lets iPhone "Add to Home Screen" open Waypoint full-screen with its own icon. -->
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Waypoint" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <script type="module" crossorigin src="./assets/index-D3HZIgSV.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-Hf_vOZeW.css">
+  </head>
+  <body>
+    <header class="app-header">
+      <h1>Waypoint</h1>
+      <nav class="tabs" aria-label="Pages">
+        <a id="tab-routes" href="#routes">Routes</a>
+        <a id="tab-report" href="#report">Report</a>
+        <a id="tab-room" href="#room">Room</a>
+        <a id="tab-friends" href="#friends">Friends</a>
+      </nav>
+      <p id="star-count" class="star-count" title="Stars to spend in your room. Earn them by walking or cycling.">⭐ 0</p>
+    </header>
+    <div id="reminder-banner" class="reminder-banner" role="status" aria-live="polite" hidden></div>
+    <div id="unfinished-banner" class="reminder-banner" role="status" aria-live="polite" hidden></div>
+
+    <main id="page-routes" class="layout">
+      <section id="route-panel" class="panel">
+        <button id="sheet-toggle" type="button" class="sheet-handle" aria-expanded="true" aria-controls="route-panel">
+          <span class="sheet-grip" aria-hidden="true"></span>
+          <span id="sheet-toggle-label">Hide panel</span>
+        </button>
+        <div id="plan-panel">
+          <p class="tagline">Compare real walking, cycling and driving routes.</p>
+
+          <form id="trip-form" novalidate>
+            <label for="from-input">From</label>
+            <div class="input-row">
+              <div class="field">
+                <input id="from-input" type="text" placeholder="e.g. Presby Hall" autocomplete="off" />
+              </div>
+              <button id="locate-button" type="button" class="secondary" title="Use my current location">
+                📍 Me
+              </button>
+            </div>
+
+            <label for="to-input">To</label>
+            <div class="field">
+              <input id="to-input" type="text" placeholder="e.g. Campus Instructional Facility" autocomplete="off" />
+            </div>
+
+            <div class="trip-options">
+              <div class="car-row">
+                <label for="car-select">🚗 Your car</label>
+                <select id="car-select">
+                  <option value="gas">Gas</option>
+                  <option value="hybrid">Hybrid</option>
+                  <option value="electric">Electric</option>
+                </select>
+              </div>
+
+              <div class="car-row">
+                <label for="arrive-by">⏰ Arrive by</label>
+                <input id="arrive-by" type="time" aria-describedby="arrive-by-hint" />
+                <small id="arrive-by-hint" class="note">optional</small>
+              </div>
+            </div>
+
+            <button id="compare-button" type="submit">Compare routes</button>
+          </form>
+
+          <div id="saved-places" class="saved-places" aria-label="Saved places"></div>
+
+          <p id="status" class="status" role="status" aria-live="polite">
+            Type a start and a destination, then press Compare routes.
+          </p>
+
+          <p id="weather-note" class="weather-note" hidden></p>
+
+          <ol id="route-list" class="route-list"></ol>
+
+          <div id="log-trip" class="log-trip" hidden>
+            <button id="navigate-button" type="button" class="primary">▶ Start navigation</button>
+            <p class="note">Arrive with navigation while walking or cycling to earn ⭐: 1 per half mile you actually travel, up to 5 per trip and 10 a day. Trips under 400 m earn none.</p>
+            <button id="remind-button" type="button" class="secondary" hidden>🔔 Remind me when to leave</button>
+            <button id="log-button" type="button">✓ I took this (no ⭐)</button>
+            <button id="save-place-button" type="button" class="secondary">☆ Save destination</button>
+            <button id="save-trip-button" type="button" class="secondary">🔁 Save this trip</button>
+            <p id="log-message" class="log-message" role="status" aria-live="polite"></p>
+          </div>
+
+          <p id="route-note" class="note" hidden>
+            Times are moving time from OpenStreetMap routing. They don't include waiting at lights, finding
+            parking, or traffic. CO₂ figures are estimates based on distance and your car: about 400 g per
+            mile for gas, 220 g for a hybrid, and 140 g for electric (from the power plants that charge it). After
+            3 walks or rides with navigation, those times use your own pace. Weather by
+            <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>.
+          </p>
+        </div>
+
+        <section id="nav-panel" class="nav-panel" hidden aria-label="Navigation">
+          <p id="nav-mode" class="nav-mode"></p>
+          <div class="nav-card">
+            <span id="nav-turn" class="nav-turn" aria-hidden="true"></span>
+            <div>
+              <p id="nav-instruction" class="nav-instruction" aria-live="polite"></p>
+              <p id="nav-step-distance" class="nav-step-distance"></p>
+            </div>
+          </div>
+          <div class="nav-stats">
+            <p><span id="nav-time-left">–</span><small id="nav-time-label">left</small></p>
+            <p><span id="nav-distance-left">–</span><small id="nav-distance-label">to go</small></p>
+            <p><span id="nav-arrival-time">–</span><small id="nav-arrival-label">arrival</small></p>
+          </div>
+          <p id="nav-status" class="nav-status" role="status" aria-live="polite"></p>
+          <div class="nav-actions">
+            <button id="nav-here" type="button" class="nav-here" hidden>✓ I'm here</button>
+            <button id="nav-stop" type="button" class="secondary nav-stop">Stop navigation</button>
+          </div>
+        </section>
+      </section>
+
+      <div id="map" class="map" aria-label="Map of the routes"></div>
+    </main>
+
+    <main id="page-report" class="page" hidden>
+      <div class="month-picker">
+        <button id="report-previous" type="button" class="secondary" aria-label="Previous month">◀</button>
+        <h2 id="report-month"></h2>
+        <button id="report-next" type="button" class="secondary" aria-label="Next month">▶</button>
+      </div>
+      <p id="report-message" class="report-message" role="status" aria-live="polite" hidden></p>
+      <div id="report-content"></div>
+      <h3 class="report-heading">Your data</h3>
+      <p class="room-hint">
+        Your trips, room and places are saved only on this device. Keep a backup so you can bring them back after
+        clearing your browser or changing phones.
+      </p>
+      <div class="share-actions">
+        <button id="backup-button" type="button" class="secondary">⬇️ Save a backup</button>
+        <label class="file-button secondary">
+          ⬆️ Restore a backup
+          <input id="restore-input" type="file" accept=".json,application/json" />
+        </label>
+      </div>
+      <div id="restore-confirm" class="restore-confirm" hidden></div>
+      <p id="backup-message" class="room-hint" role="status" aria-live="polite"></p>
+      <p id="app-version" class="app-version"></p>
+    </main>
+    <main id="page-room" class="page" hidden>
+      <div id="floor-tabs" class="floor-tabs" aria-label="Floors"></div>
+      <p class="room-hint">
+        Earn ⭐ by walking or cycling, buy furniture below, then drag it anywhere in your room. Tap a piece to
+        sell it back for half price.
+      </p>
+      <div id="room" class="room" aria-label="Your room"></div>
+      <div id="room-actions" class="room-actions" hidden></div>
+      <p id="room-message" class="room-message" role="status" aria-live="polite"></p>
+      <h3 class="report-heading">This week</h3>
+      <div id="weekly-progress" class="weekly-progress"></div>
+      <h3 class="report-heading">Medal cabinet</h3>
+      <p class="room-hint">
+        Walk or cycle with navigation to earn medals. Every mile you travel the low-carbon way counts.
+      </p>
+      <ul id="medal-cabinet" class="medal-cabinet"></ul>
+      <h3 class="report-heading">Share</h3>
+      <div class="share-actions">
+        <button id="share-picture" type="button" class="secondary">📸 Share a picture</button>
+        <button id="share-link" type="button" class="secondary">🔗 Share a link to visit</button>
+      </div>
+      <p id="share-message" class="room-hint" role="status" aria-live="polite">
+        Friends can see your room, medals and CO₂ saved; never your places or trips.
+      </p>
+      <h3 class="report-heading">Your impact</h3>
+      <div id="impact" class="impact"></div>
+      <p class="room-hint">
+        Estimates, not measurements: each trip's distance × the CO₂ per mile of the car chosen on the Routes page
+        (about 400 g for gas). Walking and cycling count as zero emissions.
+      </p>
+      <h3 class="report-heading">Room themes</h3>
+      <ul id="theme-shop" class="shop"></ul>
+      <h3 class="report-heading">Shop</h3>
+      <ul id="shop" class="shop"></ul>
+    </main>
+
+    <main id="page-friends" class="page" hidden>
+      <h2 class="visit-title">🏆 Friends</h2>
+      <p class="room-hint">See who has walked and cycled the most. There are no accounts: you swap links, and a score stays as it was until your friend sends a new one.</p>
+      <p id="friends-message" class="room-message" role="status" aria-live="polite"></p>
+      <div id="friends-board"></div>
+      <h3 class="report-heading">Share your score</h3>
+      <div class="friend-form">
+        <label for="player-name">Your name</label>
+        <input id="player-name" type="text" maxlength="30" autocomplete="off" placeholder="e.g. Tina" />
+        <button id="share-score" type="button" class="secondary">🔗 Share my score</button>
+      </div>
+      <p class="room-hint">Friends see only your name, low-carbon miles, stars and medal count; never your places or trips.</p>
+      <h3 class="report-heading">Add a friend</h3>
+      <form id="add-friend-form" class="friend-form" novalidate>
+        <label for="friend-code">Link from your friend</label>
+        <input id="friend-code" type="text" autocomplete="off" placeholder="Paste the link here" />
+        <button type="submit" class="secondary">Add to leaderboard</button>
+      </form>
+    </main>
+
+    <main id="page-visit" class="page" hidden>
+      <h2 class="visit-title">🏠 A friend's Waypoint room</h2>
+      <p class="room-hint">Shared from Waypoint, where walking and cycling earn stars to decorate a room.</p>
+      <div id="visit-content"></div>
+      <p><a href="#routes" class="visit-home">Open my own Waypoint →</a></p>
+    </main>
+
+    <dialog id="trip-dialog" class="trip-dialog" aria-labelledby="trip-dialog-title">
+      <form method="dialog">
+        <h2 id="trip-dialog-title"></h2>
+        <p id="trip-dialog-stars" class="trip-dialog-stars"></p>
+        <p id="trip-dialog-message" class="trip-dialog-message"></p>
+        <div class="trip-dialog-actions">
+          <button id="trip-dialog-cancel" type="submit" value="cancel" class="secondary"></button>
+          <button id="trip-dialog-confirm" type="submit" value="confirm"></button>
+        </div>
+      </form>
+    </dialog>
+
+  </body>
+</html>
