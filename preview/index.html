@@ -11,8 +11,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Waypoint" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <script type="module" crossorigin src="./assets/index-BH-dHrW0.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-DrfFMsRM.css">
+    <script type="module" crossorigin src="./assets/index-Cj-Ou_6a.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-Cym_cUO1.css">
   </head>
   <body>
     <header class="app-header">
@@ -38,20 +38,23 @@
           <p class="tagline">Compare real walking, cycling and driving routes.</p>
 
           <form id="trip-form" novalidate>
+            <p id="first-hint" class="first-hint">Type a start and a destination, then press Compare routes.</p>
             <label for="from-input">From</label>
             <div class="input-row">
               <div class="field">
-                <input id="from-input" type="text" placeholder="e.g. Presby Hall" autocomplete="off" />
+                <input id="from-input" aria-describedby="from-error" type="text" placeholder="e.g. Presby Hall" autocomplete="off" />
               </div>
               <button id="locate-button" type="button" class="secondary" title="Use my current location">
                 📍 Me
               </button>
             </div>
+            <p id="from-error" class="field-error" role="alert" hidden></p>
 
             <label for="to-input">To</label>
             <div class="field">
-              <input id="to-input" type="text" placeholder="e.g. Campus Instructional Facility" autocomplete="off" />
+              <input id="to-input" aria-describedby="to-error" type="text" placeholder="e.g. Campus Instructional Facility" autocomplete="off" />
             </div>
+            <p id="to-error" class="field-error" role="alert" hidden></p>
 
             <div class="trip-options">
               <div class="car-row">
